@@ -1,0 +1,37 @@
+# version: '3.8'
+
+services:
+  app:
+    build: .
+    command: ./.docker/start.sh
+    container_name: mini-task-scheduler-app
+    ports:
+      - 3002:3000
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - mini-task-scheduler-app-postgresql
+    environment:
+      - POSTGRES_HOST=localhost
+      - POSTGRES_DATABASE=root
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+
+  mini-task-scheduler-app-postgresql:
+    container_name: mini-task-scheduler-app-db
+    image: postgres:9.4
+    environment:
+      - POSTGRES_HOST=localhost
+      - POSTGRES_DATABASE=root
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    ports:
+      - "5432:5432" 
+    volumes:
+      - postgres_data:/var/lib/mini-task-scheduler-app-postgresql/mini-task-scheduler-app
+      - ./scripts:/docker-entrypoint-initdb.d
+    command: ["postgres", "-c", "log_statement=all"]
+
+volumes:
+  postgres_data:
+    driver: local
