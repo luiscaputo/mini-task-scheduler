@@ -12,9 +12,9 @@ model User {
   email        String   @unique
   passwordHash String   @map("password_hash")
   name         String?
-  tasks        Task[]
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
+  tasks        Task[]
 
   @@map("users")
 }
@@ -24,12 +24,12 @@ model Task {
   title       String
   description String?
   ownerId     String        @map("owner_id")
-  owner       User          @relation(fields: [ownerId], references: [id])
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
   dueDate     DateTime?     @map("due_date")
   priority    TasksPriority @default(medium)
   status      TasksStatus   @default(todo)
+  owner       User          @relation(fields: [ownerId], references: [id])
 
   @@index([ownerId])
   @@map("tasks")
